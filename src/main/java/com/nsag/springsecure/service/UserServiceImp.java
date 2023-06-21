@@ -19,28 +19,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImp implements UserService {
 
-	/*@Autowired
-	private UserRepositry userRepositry;
-	@Autowired
-	private PasswordEncoder passwordEncoder;
-	@Override
-	public List<AppUser> findAll() {
-		// TODO Auto-generated method stub
-		return userRepositry.findAll();
-	}
 
-	@Override
-	public Optional<AppUser> findById(Long id) {
-		// TODO Auto-generated method stub
-		return userRepositry.findById(id);
-	}
-
-	@Override
-	public void save(AppUser appUser) {
-		appUser.setPassword(passwordEncoder.encode(appUser.getPassword()));
-		userRepositry.save(appUser);
-		
-	}*/
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
