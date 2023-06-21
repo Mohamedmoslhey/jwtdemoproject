@@ -6,6 +6,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,23 +14,26 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nsag.springsecure.config.JwtTokenUtil;
 import com.nsag.springsecure.entity.JwtRequest;
 import com.nsag.springsecure.entity.JwtResponse;
-import com.nsag.springsecure.service.UserService;
+import com.nsag.springsecure.entity.UserDao;
+import com.nsag.springsecure.service.UserServiceImp;
 
 @RestController
 public class JwtGenerateController {
 
 	@Autowired
-	private UserService userService;
+	private UserServiceImp userService;
 	
 	@Autowired
 	private AuthenticationManager authenticationManager;
 	
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 	
 	@PostMapping({"/authenticate"})
 public ResponseEntity<?> CreateAuthToken(@RequestBody JwtRequest jwtreq) throws Exception{
-		authenticate(jwtreq.getUsername(), jwtreq.getPassword());
+		//authenticate(jwtreq.getUsername(), jwtreq.getPassword());
 
 		;
 
@@ -47,6 +51,11 @@ public ResponseEntity<?> CreateAuthToken(@RequestBody JwtRequest jwtreq) throws 
 			throw new Exception("INVALID_CREDENTIALS", e);
 		}
 		
+	}
+	
+	@PostMapping({"/register"})
+	public ResponseEntity<?> saveUser(@RequestBody UserDao user) throws Exception {
+		return ResponseEntity.ok(userService.save(user));
 	}
 	
 	/*@GetMapping("/{id}")

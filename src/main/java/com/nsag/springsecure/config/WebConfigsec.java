@@ -34,19 +34,27 @@ import com.nsag.springsecure.service.UserService;
 
 @Configuration
 @EnableWebSecurity
-public class WebConfig extends WebSecurityConfigurerAdapter{
+public class WebConfigsec extends WebSecurityConfigurerAdapter{
 	@Autowired
 	private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
+	/*@Autowired
+	private UserDetailsService  jwtUserDetailsService;*/
 	@Autowired
-	private UserService jwtUserDetailsService;
+	private UserService userService;
 
 	@Autowired
 	private JwtRequestFilter jwtRequestFilter;
+	
+	
+	@Bean
+	public PasswordEncoder pasw(){
+		return new BCryptPasswordEncoder();
+	}
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		// TODO Auto-generated method stub
-		auth.userDetailsService(jwtUserDetailsService).passwordEncoder(pasw());
+		auth.userDetailsService(userService).passwordEncoder( pasw());
 	}
 
 	@Override
@@ -65,16 +73,13 @@ public class WebConfig extends WebSecurityConfigurerAdapter{
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		// TODO Auto-generated method stub
-		http.csrf().disable().authorizeRequests().antMatchers("/authenticate").permitAll()
+		http.csrf().disable().authorizeRequests().antMatchers("/authenticate", "/register").permitAll()
 		.anyRequest().authenticated().and().
 		exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
 		.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 	}
-	@Bean
-	public PasswordEncoder pasw(){
-		return new BCryptPasswordEncoder();
-	}
+	
 	/*
 	
 	
